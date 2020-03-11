@@ -1,0 +1,64 @@
+apiVersion: ripsaw.cloudbulldozer.io/v1alpha1
+kind: Benchmark
+metadata:
+  name: fio-benchmark
+  namespace: my-ripsaw
+spec:
+  elasticsearch:
+    server: perf-sm5039-4-5.perf.lab.eng.rdu2.redhat.com
+    port: 9200
+  clustername: acalhoun-ocp-ocs-baremetal-cluster-
+  test_user: acalhoun
+  workload:
+    name: "fio_distributed"
+    args:
+      samples: 3
+      servers: 5
+      pin_server: ''
+      jobs:
+        - read
+        - write
+        - randwrite
+        - randread
+      bs:
+        - 4096KiB
+        - 1024KiB
+        - 256KiB
+        - 64KiB
+        - 16KiB
+        - 8KiB
+        - 4KiB
+      numjobs:
+        - 1
+      iodepth: 32
+      read_runtime: 600
+      read_ramp_time: 0
+      filesize: 36GiB
+      log_sample_rate: 30000
+      storageclass: example-storagecluster-ceph-rbd
+      storagesize: 36Gi
+#######################################
+#  EXPERT AREA - MODIFY WITH CAUTION  #
+#######################################
+  job_params:
+    - jobname_match: w
+      params:
+       - create_on_open=1
+       - fsync_on_close=1
+    - jobname_match: write
+      params:
+        - time_based=1
+        - runtime={{ fiod.read_runtime }}
+        - ramp_time={{ fiod.read_ramp_time }}
+        - overwrite=1
+    - jobname_match: read
+      params:
+        - time_based=1
+        - runtime={{ fiod.read_runtime }}
+        - ramp_time={{ fiod.read_ramp_time }}
+    - jobname_match: rw #readwrite
+      params:
+        - rwmixread=50
+        - time_based=1
+        - runtime={{ fiod.read_runtime }}
+        - ramp_time={{ fiod.read_ramp_time }}
