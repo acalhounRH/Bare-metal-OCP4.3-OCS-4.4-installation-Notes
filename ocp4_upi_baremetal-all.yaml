@@ -1,0 +1,17 @@
+# at present we support 2 labs, alias or scale_lab
+lab_name: "scale_lab"
+
+# see your reservation ticket number and IPMI username/password here:
+# Alias: http://wiki.alias.bos.scalelab.redhat.com
+# Scale lab: http://wiki.rdu2.scalelab.redhat.com
+ipmi_password: "<IPMI PASSWD>"
+
+# UPDATE THIS WITH YOUR RHCOS release URL, example:
+rhcos_url: http://perf1.perf.lab.eng.bos.redhat.com/pub/bengland/tmp/ocp4/rhcos-4.4.0-0.nightly-2020-02-25-155201/
+
+# UPDATE THIS WITH YOUR OpenShift client+install tree
+openshift_release_url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp-dev-preview/4.3.0-0.nightly-2020-02-13-160831/
+
+# REPLACE THIS WITH YOUR PULL SECRET USING YOUR ACCOUNT, example:
+# environment variable for example will be more secure than placing in group_vars
+ocp4_pull_secret: <PULL SECRET>
