@@ -16,3 +16,11 @@ oc delete pv --all
 oc delete -f ./local-storage-operator/examples/olm/catalog-create-subscribe.yaml
 
 echo "Local-storage and OCS are uninstalled, now wipe all devices on storage hosts!!!"
+
+ansible -m shell -a "sudo sgdisk -Z /dev/nvme0n1; \
+                     sudo sgdisk -Z /dev/nvme1n1; \
+                     sudo sgdisk -Z /dev/nvme2n1; \
+                     sudo sgdisk -Z /dev/nvme3n1 \ 
+                     " -i post_install_inventory_supermicro.yml all -u core
+
+ansible -m shell -a "sudo reboot " -i post_install_inventory_supermicro.yml all -u core
