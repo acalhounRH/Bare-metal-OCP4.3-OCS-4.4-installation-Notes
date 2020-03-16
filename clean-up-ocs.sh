@@ -1,4 +1,4 @@
-oc delete -f small-scale-ocs-cluster-cr.yaml
+oc delete -f scale-ocs-cluster-cr.yaml
 sleep 30
 oc delete pvc --all
 oc delete storagecluster --all -n openshift-storage --wait=true --timeout=5m --cascade=false
