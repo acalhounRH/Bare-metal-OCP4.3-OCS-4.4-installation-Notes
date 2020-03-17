@@ -1,0 +1,49 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  namespace: openshift-storage
+  name: example-storagecluster
+spec:
+  manageNodes: false
+  monDataDirHostPath: /var/lib/rook
+  storageDeviceSets:
+    - name: example-deviceset-0
+      count: 3
+      replica: 1
+      resources:
+         requests: {}
+         limits: {}
+      placement:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: cluster.ocs.openshift.io/openshift-storage
+                    operator: Exists
+                  - key: topology.rook.io/rack
+                    operator: In
+                    values:
+                      - rack0
+                      - rack1
+                      - rack2
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - rook-ceph-osd
+                topologyKey: topology.rook.io/rack
+              weight: 100
+      dataPVCTemplate:
+        spec:
+          storageClassName: localblock-sc
+          accessModes:
+            - ReadWriteOnce
+          volumeMode: Block
+          resources:
+            requests:
+              storage: 372Gi
+      portable: false
