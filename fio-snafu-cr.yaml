@@ -20,6 +20,7 @@ spec:
         - write
         - randwrite
         - randread
+        - rw
       bs:
         - 4096KiB
         - 1024KiB
